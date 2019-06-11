@@ -3192,12 +3192,12 @@ protobuf_c_message_unpack(const ProtobufCMessageDescriptor *desc,
 			     is_packable_type(field->type)))
 			{
 				size_t count;
-				if (!count_packed_elements(field->type,
-							   tmp.len -
-							   tmp.length_prefix_len,
-							   tmp.data +
-							   tmp.length_prefix_len,
-							   &count))
+				size_t packed_elem_len = tmp.len - tmp.length_prefix_len;
+				if (packed_elem_len > rem || !count_packed_elements(field->type,
+					      packed_elem_len,
+					      tmp.data +
+					      tmp.length_prefix_len,
+					      &count))
 				{
 					PROTOBUF_C_UNPACK_ERROR("counting packed elements");
 					goto error_cleanup_during_scan;
